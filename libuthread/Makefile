@@ -1,19 +1,29 @@
 # Target library
 lib := libuthread.a
 
-all: $(lib) queueTest
+all: $(lib)
 
-queueTest: queue.o queue_tester_example.o
-    gcc -Wall -Wextra -Werror -o queueTest queue.o queue_tester_example.o
+CC := gcc
+CFLAGS := -Wall -Wextra -Werror
+
+## Phase 1: Build library
+libuthread.a: preempt.o sem.o queue.o uthread.o context.o
+    ar rcs $@ $^
+
+preempt.o: preempt.c uthread.o
+    $(CC) $(CFLAGS) -c -o $@ $<
+
+sem.o: sem.c sem.h uthread.o queue.o context.o
+    $(CC) $(CFLAGS) -c -o $@ $< -l uthread -l queue -l context
+
+uthread.o: uthread.c uthread.h queue.o context.o
+    $(CC) $(CFLAGS) -c -o $@ $< -l context -l queue
 
 queue.o: queue.c queue.h
-    gcc -Wall -Wextra -Werror -c -o queue.o queue.c
+    $(CC) $(CFLAGS) -c -o $@ $<
 
-queue_tester_example.o: queue_tester_example.c
-    gcc -Wall -Wextra -Werror -c -o queue_tester_example.o queue_tester_example.c
+context.o: private.h context.c
+    $(CC) $(CFLAGS) -c -o $@ $<
 
-## TODO: Phase 1
-$(lib): queue.o
-    ar rcs $(lib) queue.o
 clean:
-    rm -rf queue.o libuthread.a
+    rm -rf sem.o queue.o node.o preempt.o uthread.o context.o libuthread.a
