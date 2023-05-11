@@ -16,6 +16,7 @@ queue_t ready_list;
 queue_t waiting_list;
 struct uthread_tcb* prev_thread;
 struct uthread_tcb* next_thread;
+struct uthread_tcb* main_thread;
 
 struct uthread_tcb {
 	/* TODO Phase 2 */
@@ -36,7 +37,7 @@ void uthread_yield(void)
 {
     preempt_disable();
     queue_dequeue(ready_list, ((void**) &process));
-    uthread_ctx_switch(prev_thread->context, process->context);
+    uthread_ctx_switch(prev_thread->context, main_thread->context);
 	/* TODO Phase 2 */
 }
 
@@ -48,7 +49,7 @@ void uthread_exit(void)
     free(prev_thread->stack);
     queue_delete(ready_list, prev_thread);
     queue_dequeue(ready_list, ((void**) &process));
-    uthread_ctx_switch(prev_thread->context, next_thread->context);
+    uthread_ctx_switch(prev_thread->context, main_thread->context);
 }
 
 int uthread_create(uthread_func_t func, void *arg)
@@ -100,12 +101,12 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 	prev_thread = malloc(sizeof(struct uthread_tcb));
 	prev_thread->context = malloc(sizeof(ucontext_t));
 	getcontext(prev_thread->context);
-	process = malloc(sizeof(struct uthread_tcb));
-	process->context = malloc(sizeof(ucontext_t));
-	getcontext(process->context);
+	main_thread = malloc(sizeof(struct uthread_tcb));
+	main_thread->context = malloc(sizeof(ucontext_t));
+	getcontext(main_thread->context);
 	if(queue_length(waiting_list)){
 		queue_dequeue(waiting_list, ((void**) &next_thread));
-		current = next_thread;
+		process = next_thread;
 		uthread_ctx_switch(prev_thread->context, next_thread->context);
 	}
 	preempt_stop();
@@ -118,9 +119,9 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
         free(b[i]->context);
         free(b[i]);
 	}
-	free(process->context);
+	free(main_thread->context);
 	free(prev_thread->context);
-	free(process);
+	free(main_thread);
 	free(prev_thread);
 	queue_destroy(waiting_list);
 	queue_destroy(ready_list);
