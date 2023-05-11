@@ -10,7 +10,6 @@ struct semaphore {
 	int count;
 	queue_t waiting_list;
 };
-struct uthread_tcb* uthread;
 sem_t sem_create(size_t count)
 {
 	/* TODO Phase 3 */
@@ -43,7 +42,7 @@ int sem_down(sem_t sem)
     if (sem->count == 0) {
         /* If no resources available, wait until one becomes available */
         queue_enqueue(sem->waiting_list, uthread_current());
-        uthread_yield();
+        uthread_black();
     }
     else{
     	sem->count--;
@@ -64,8 +63,10 @@ int sem_up(sem_t sem)
 	    sem->count++;
     }
     else{
-       queue_dequeue(sem->waiting_list, ((void**) &uthread));
-        uthread_unblock(uthread);
+	    
+	struct uthread_tcb* new ;
+       queue_dequeue(sem->waiting_list, ((void**) &new));
+        uthread_unblock(new);
     }
 
     return 0;
