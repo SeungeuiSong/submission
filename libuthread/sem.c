@@ -19,7 +19,7 @@ sem_t sem_create(size_t count)
         return NULL;
     }
 
-    semap -> waiting_list = queue_creat();
+    semap -> waiting_list = queue_create();
     semap->count = count;
 
     return semap;
