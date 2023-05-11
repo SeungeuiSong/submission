@@ -98,3 +98,79 @@ int queue_dequeue(queue_t queue, void **data)
 	struct node* secondNode = queue->head->next->next;
 
 	*data = queue->head->next->val;
+	free(queue->head->next);
+
+	// make the old secondNode the new firstNode
+	queue->head->next = secondNode;
+
+	// decrement length
+	queue->length--;
+
+	return 0;
+}
+
+int queue_delete(queue_t queue, void *data)
+{
+	/* TODO Phase 1 */
+
+	// return -1 if queue or data is NULL
+	if (queue == NULL || data == NULL){
+		return -1;
+	}
+
+	struct node* node = queue->head;
+	while (node->next != NULL)
+	{
+		if (node->next->val == data)
+		{
+			struct node* nextNode = node->next->next;
+
+			if (nextNode == NULL) {
+				queue->tail->prev = node;
+			}
+
+			free(node->next);
+			node->next = nextNode;
+			queue->length--;
+
+			return 0;
+		}
+		node = node->next;
+	}
+	return -1;
+}
+
+int queue_iterate(queue_t queue, queue_func_t func)
+{
+	/* TODO Phase 1 */
+
+	if (queue == NULL || func == NULL) {
+		return -1;
+	}
+
+	struct node* nodes[queue->length]; 
+	struct node* currNode = queue->head->next;
+
+    for(int i = 0; i < queue->length; i++) {
+		nodes[i] = currNode;
+		currNode = currNode->next;
+    }
+
+	for(int i = 0; i < queue->length; i++) {
+		if(nodes[i] != NULL)
+			func(queue, nodes[i]->val);
+	}
+	
+    return 0;
+}
+
+int queue_length(queue_t queue)
+{
+	/* TODO Phase 1 */
+
+	if (queue == NULL) {
+		return -1;
+	}
+
+	return queue->length;
+}
