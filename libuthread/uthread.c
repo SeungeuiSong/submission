@@ -65,24 +65,23 @@ int uthread_create(uthread_func_t func, void *arg)
         return -1;
     }
 
+    new_thread->context = malloc(sizeof(ucontext_t));
     new_thread->stack = uthread_ctx_alloc_stack();
-    if (new_thread->stack == NULL) {
-        free(new_thread);
-        preempt_enable();
-        return -1;
-    }
-
-    new_thread->tid = queue_length(ready_list) + 1;
     new_thread->state = 1;
+    new_thread->tid = uthread_ctx_init(ut->context, ut->stack, func, arg);
 
     if (uthread_ctx_init(new_thread->context, new_thread->stack, func, arg) == -1) {
         free(new_thread->stack);
+        free(new_thread->tid);
+        free(new_thread->context);
+        free(new_thread->state);
         free(new_thread);
         preempt_enable();
         return -1;
     }
 
     queue_enqueue(ready_list, new_thread);
+    queue_enqueue(waiting_list, new_thread);
     preempt_enable();
     return new_thread->tid;
 }
