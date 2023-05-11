@@ -37,8 +37,13 @@ void preempt_enable(void)
 }
 
 void preempt_start(bool preempt)
-{
-    if (preempt) {
+{    if (preempt) {
+        time.it_value.tv_sec = 0;
+        time.it_value.tv_usec = 1000000 / HZ;
+        time.it_interval.tv_sec = 0;
+        time.it_interval.tv_usec = 1000000 / HZ;
+        setitimer(ITIMER_REAL, &time, NULL);
+    }
         struct sigaction sa;
 	struct itimerval time;
         sa.sa_handler = NonPreemptive;
@@ -46,12 +51,7 @@ void preempt_start(bool preempt)
         sa.sa_flags = 0;
         sigaction(SIGALRM, &sa, NULL);
 
-        time.it_value.tv_sec = 0;
-        time.it_value.tv_usec = 1000000 / HZ;
-        time.it_interval.tv_sec = 0;
-        time.it_interval.tv_usec = 1000000 / HZ;
-        setitimer(ITIMER_REAL, &time, NULL);
-    }
+
 }
 
 void preempt_stop(void)
