@@ -106,8 +106,7 @@ void uthread_block(void)
     struct uthread_tcb *prev_thread = process;
     prev_thread->state = 0;
     queue_enqueue(waiting_list, prev_thread);
-    struct uthread_tcb *next_thread = queue_dequeue(ready_list);
-    process = next_thread;
+    queue_dequeue(ready_list, ((void**) &process));
     uthread_ctx_switch(prev_thread->context, next_thread->context);
     preempt_enable();
 }
