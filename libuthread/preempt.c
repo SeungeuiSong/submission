@@ -14,20 +14,42 @@
  * 100Hz is 100 times per second
  */
 #define HZ 100
+static void NonPreemptive()
+{
+    uthread_yield();
+}
+
 
 void preempt_disable(void)
 {
-	/* TODO Phase 4 */
+    sigset_t setofsignal;
+    sigemptyset(&setofsignal);
+    sigaddset(&setofsignal, SIGVTALRM);
+    sigprocmask(SIG_BLOCK, &setofsignal, NULL);
 }
 
 void preempt_enable(void)
 {
-	/* TODO Phase 4 */
+    sigset_t setofsignal;
+    sigemptyset(&setofsignal);
+    sigaddset(&sesetofsignalt, SIGVTALRM);
+    sigprocmask(SIG_UNBLOCK, &setofsignal, NULL);
 }
 
 void preempt_start(bool preempt)
 {
-	/* TODO Phase 4 */
+    if (preempt) {
+        struct sigaction sa;
+        sa.sa_handler = timer_handler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0;
+        sigaction(SIGALRM, &sa, NULL);
+
+        timer.it_value.tv_sec = 0;
+        timer.it_value.tv_usec = 1000000 / HZ;
+        timer.it_interval = timer.it_value;
+        setitimer(ITIMER_REAL, &timer, NULL);
+    }
 }
 
 void preempt_stop(void)
