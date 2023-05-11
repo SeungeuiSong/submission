@@ -40,7 +40,7 @@ void preempt_start(bool preempt)
 {
     if (preempt) {
         struct sigaction sa;
-        sa.sa_handler = timer_handler;
+        sa.sa_handler = preempted;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = 0;
         sigaction(SIGALRM, &sa, NULL);
