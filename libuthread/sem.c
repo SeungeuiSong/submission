@@ -7,11 +7,22 @@
 
 struct semaphore {
 	/* TODO Phase 3 */
+	int count;
+	queue_t waiting_list;
 };
 
 sem_t sem_create(size_t count)
 {
 	/* TODO Phase 3 */
+    struct semaphore* sem = malloc(sizeof(struct semaphore));
+    if (sem == NULL) {
+        return NULL;
+    }
+
+    sem->count = count;
+    sem -> waitlist = queue_creat();
+
+    return sem;
 }
 
 int sem_destroy(sem_t sem)
