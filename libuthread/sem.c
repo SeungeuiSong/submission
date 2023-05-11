@@ -14,20 +14,21 @@ struct semaphore {
 sem_t sem_create(size_t count)
 {
 	/* TODO Phase 3 */
-    struct semaphore* sem = malloc(sizeof(struct semaphore));
-    if (sem == NULL) {
+    struct semaphore* semap = malloc(sizeof(struct semaphore));
+    if (semap == NULL) {
         return NULL;
     }
 
-    sem->count = count;
-    sem -> waitlist = queue_creat();
+    semap -> waiting_list = queue_creat();
+    semap->count = count;
 
-    return sem;
+    return semap;
 }
 
 int sem_destroy(sem_t sem)
 {
 	/* TODO Phase 3 */
+	
 }
 
 int sem_down(sem_t sem)
