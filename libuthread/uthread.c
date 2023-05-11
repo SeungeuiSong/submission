@@ -39,8 +39,6 @@ void uthread_yield(void)
     queue_enqueue(ready_list, prev_thread);
     queue_dequeue(ready_list, ((void**) &process));
     uthread_ctx_switch(prev_thread->context, process->context);
-    preempt_enable();
-
 	/* TODO Phase 2 */
 }
 
@@ -53,7 +51,6 @@ void uthread_exit(void)
     queue_delete(ready_list, prev_thread);
     queue_dequeue(ready_list, ((void**) &process));
     uthread_ctx_switch(prev_thread->context, next_thread->context);
-    preempt_enable();
 }
 
 int uthread_create(uthread_func_t func, void *arg)
