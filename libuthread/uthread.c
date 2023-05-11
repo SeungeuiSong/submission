@@ -55,7 +55,7 @@ void uthread_exit(void)
     uthread_ctx_switch(prev_thread->context, next_thread->context);
     preempt_enable();
 }
-/*
+
 int uthread_create(uthread_func_t func, void *arg)
 {
     preempt_disable();
@@ -87,37 +87,6 @@ int uthread_create(uthread_func_t func, void *arg)
     queue_enqueue(waiting_list, new_thread);
     preempt_enable();
     return rv;
-}*/
-
-int uthread_create(uthread_func_t func, void *arg)
-{
-    preempt_disable();
-    struct uthread_tcbnew_thread = (struct uthread_tcb *)malloc(sizeof(struct uthread_tcb));
-    if (new_thread == NULL) {
-        preempt_enable();
-        return -1;
-    }
-
-    new_thread->stack = uthread_ctx_alloc_stack();
-    if (new_thread->stack == NULL) {
-        free(new_thread);
-        preempt_enable();
-        return -1;
-    }
-
-    new_thread->tid = queue_length(&ready_list) + 1;
-    new_thread->state = 1;
-
-    if (uthread_ctx_init(&(new_thread->context), new_thread->stack, func, arg) == -1) {
-        free(new_thread->stack);
-        free(new_thread);
-        preempt_enable();
-        return -1;
-    }
-
-    queue_enqueue(&ready_list, new_thread);
-    preempt_enable();
-    return new_thread->tid;
 }
 
 
