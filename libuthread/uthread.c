@@ -72,9 +72,7 @@ int uthread_create(uthread_func_t func, void *arg)
 
     if (uthread_ctx_init(new_thread->context, new_thread->stack, func, arg) == -1) {
         free(new_thread->stack);
-        free(new_thread->tid);
         free(new_thread->context);
-        free(new_thread->state);
         free(new_thread);
         preempt_enable();
         return -1;
