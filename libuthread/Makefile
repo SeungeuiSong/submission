@@ -13,17 +13,15 @@ libuthread.a: preempt.o sem.o queue.o node.o uthread.o context.o
 preempt.o: preempt.c uthread.o
     $(CC) $(CFLAGS) -c -o $@ $<
 
-sem.o: sem.c sem.h uthread.o queue.o node.o context.o
-    $(CC) $(CFLAGS) -c -o $@ $< -l uthread -l queue -l node -l context
+sem.o: sem.c sem.h uthread.o queue.o context.o
+    $(CC) $(CFLAGS) -c -o $@ $< -l uthread -l queue -l context
 
-uthread.o: uthread.c uthread.h queue.o node.o context.o
-    $(CC) $(CFLAGS) -c -o $@ $< -l context -l queue -l node
+uthread.o: uthread.c uthread.h queue.o context.o
+    $(CC) $(CFLAGS) -c -o $@ $< -l context -l queue
 
-queue.o: queue.c queue.h node.o
-    $(CC) $(CFLAGS) -c -o $@ $< -l node
+queue.o: queue.c queue.h
+    $(CC) $(CFLAGS) -c -o $@ $< 
 
-node.o: node.c node.h
-    $(CC) $(CFLAGS) -c -o $@ $<
 
 context.o: private.h context.c
     $(CC) $(CFLAGS) -c -o $@ $<
