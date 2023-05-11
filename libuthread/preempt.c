@@ -32,7 +32,7 @@ void preempt_enable(void)
 {
     sigset_t setofsignal;
     sigemptyset(&setofsignal);
-    sigaddset(&sesetofsignalt, SIGVTALRM);
+    sigaddset(&setofsignal, SIGVTALRM);
     sigprocmask(SIG_UNBLOCK, &setofsignal, NULL);
 }
 
