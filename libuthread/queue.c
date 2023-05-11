@@ -118,6 +118,7 @@ int queue_delete(queue_t queue, void *data)
 		return -1;
 	}
 
+	// start at head, traverse until end or until data is found
 	struct node* node = queue->head;
 	while (node->next != NULL)
 	{
@@ -137,6 +138,8 @@ int queue_delete(queue_t queue, void *data)
 		}
 		node = node->next;
 	}
+
+	// if data wasn't found return -1
 	return -1;
 }
 
@@ -144,19 +147,23 @@ int queue_iterate(queue_t queue, queue_func_t func)
 {
 	/* TODO Phase 1 */
 
+	// return -1 if queue or func is NULL
 	if (queue == NULL || func == NULL) {
 		return -1;
 	}
 
+	// make an array of nodes to represent the queue, set current node to the first element in the queue
 	struct node* nodes[queue->length]; 
 	struct node* currNode = queue->head->next;
 
-    for(int i = 0; i < queue->length; i++) {
+	// put all nodes into array in order of queue
+    for (int i = 0; i < queue->length; i++) {
 		nodes[i] = currNode;
 		currNode = currNode->next;
     }
 
-	for(int i = 0; i < queue->length; i++) {
+	// execute the parametized function on all nodes
+	for (int i = 0; i < queue->length; i++) {
 		if(nodes[i] != NULL)
 			func(queue, nodes[i]->val);
 	}
@@ -168,9 +175,11 @@ int queue_length(queue_t queue)
 {
 	/* TODO Phase 1 */
 
+	// return -1 if queue is NULL
 	if (queue == NULL) {
 		return -1;
 	}
 
+	// return the length of the queue
 	return queue->length;
 }
