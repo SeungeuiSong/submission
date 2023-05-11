@@ -88,19 +88,6 @@ int uthread_create(uthread_func_t func, void *arg)
     preempt_enable();
     return rv;
 }
-
-int uthread_run(bool preempt, uthread_func_t func, void *arg)
-{
-    if (preempt) {
-	preempt_start(preempt);
-    }
-    int tid = uthread_create(func, arg);
-    if (tid == -1) {
-        return -1;
-    }
-    uthread_yield();
-    return tid;
-}
 */
 int uthread_create(uthread_func_t func, void arg)
 {
@@ -131,6 +118,19 @@ int uthread_create(uthread_func_t func, void arg)
     queue_enqueue(&ready_list, new_thread);
     preempt_enable();
     return new_thread->tid;
+}
+
+int uthread_run(bool preempt, uthread_func_t func, void *arg)
+{
+    if (preempt) {
+	preempt_start(preempt);
+    }
+    int tid = uthread_create(func, arg);
+    if (tid == -1) {
+        return -1;
+    }
+    uthread_yield();
+    return tid;
 }
 void uthread_block(void)
 {
