@@ -36,7 +36,7 @@ void uthread_yield(void)
     struct uthread_tcb *prev_thread = process;
     queue_enqueue(ready_list, prev_thread);
     queue_dequeue(ready_list, ((void**) &process));
-    uthread_ctx_switch(prev_thread->context, next_thread->context);
+    uthread_ctx_switch(prev_thread->context, process->context);
     preempt_enable();
 
 	/* TODO Phase 2 */
