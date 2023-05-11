@@ -3,8 +3,8 @@ lib := libuthread.a
 
 all: $(lib)
 
-CC := gcc
-CFLAGS :=   -Wall-Wextra -Werror
+  CC := gcc
+  CFLAGS :=   -Wall-Wextra -Werror
 
 ## Phase 1: Build library
 libuthread.a:   preempt.o   sem.o   queue.o uthread.o   context.o
