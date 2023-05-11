@@ -34,7 +34,7 @@ void uthread_yield(void)
 {
     preempt_disable();
     struct uthread_tcb *prev_thread = process;
-    queue_enqueue(&ready_list, prev_thread);
+    queue_enqueue(ready_list, prev_thread);
     struct uthread_tcb *next_thread = queue_dequeue(&ready_list);
     process = next_thread;
     uthread_ctx_switch(prev_thread->context, next_thread->context);
