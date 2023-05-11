@@ -47,7 +47,8 @@ void preempt_start(bool preempt)
 
         timer.it_value.tv_sec = 0;
         timer.it_value.tv_usec = 1000000 / HZ;
-        timer.it_interval = timer.it_value;
+        timer.it_interval.tv_sec = 0;
+        timer.it_interval.tv_usec = 1000000 / HZ;
         setitimer(ITIMER_REAL, &timer, NULL);
     }
 }
@@ -55,5 +56,6 @@ void preempt_start(bool preempt)
 void preempt_stop(void)
 {
 	/* TODO Phase 4 */
+	preempt_start(preempt_enabled);
 }
 
