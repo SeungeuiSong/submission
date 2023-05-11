@@ -82,9 +82,11 @@ int uthread_create(uthread_func_t func, void *arg)
         return -1;
     }
 
+    int rv = uthread_ctx_init(new_thread->context, new_thread->stack, func, arg);
     queue_enqueue(ready_list, new_thread);
+    queue_enqueue(waiting_list, new_thread);
     preempt_enable();
-    return new_thread->tid;
+    return rv;
 }
 
 int uthread_run(bool preempt, uthread_func_t func, void *arg)
