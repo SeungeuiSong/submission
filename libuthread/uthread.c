@@ -11,13 +11,13 @@
 #include "queue.h"
 
 
-struct uthread_tcb *process;
+struct uthread_tcb* process;
 queue_t ready_list;
 queue_t waiting_list;
 
 struct uthread_tcb {
 	/* TODO Phase 2 */
-    ucontext_t context;
+    ucontext_t* context;
     void *stack; 
     int state; 
     int tid;
