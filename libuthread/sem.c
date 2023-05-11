@@ -40,12 +40,14 @@ int sem_down(sem_t sem)
 	    /* Try to take a resource */
     if(sem == NULL)
 	return -1;
-    while (sem->count == 0) {
+    if (sem->count == 0) {
         /* If no resources available, wait until one becomes available */
         queue_enqueue(sem->waiting_list, uthread_current());
-        uthread_block();
+        uthread_yield();
     }
-    sem->count--;
+    else{
+    	sem->count--;
+    }
     return 0;
 	
 }
