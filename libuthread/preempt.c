@@ -57,6 +57,6 @@ void preempt_start(bool preempt)
 void preempt_stop(void)
 {
 	/* TODO Phase 4 */
-	preempt_start(preempt_enable);
+	setitimer(ITIMER_VIRTUAL, NULL, NULL);
 }
 
