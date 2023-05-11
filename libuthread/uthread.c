@@ -14,6 +14,8 @@
 struct uthread_tcb* process;
 queue_t ready_list;
 queue_t waiting_list;
+struct uthread_tcb* prev_thread;
+struct uthread_tcb* next_thread;
 
 struct uthread_tcb {
 	/* TODO Phase 2 */
