@@ -40,15 +40,15 @@ void preempt_start(bool preempt)
 {
     if (preempt) {
         struct sigaction sa;
-        sa.sa_handler = preempted;
+        sa.sa_handler = preempt;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = 0;
         sigaction(SIGALRM, &sa, NULL);
 
-        timer.it_value.tv_sec = 0;
-        timer.it_value.tv_usec = 1000000 / HZ;
-        timer.it_interval.tv_sec = 0;
-        timer.it_interval.tv_usec = 1000000 / HZ;
+        utimes.it_value.tv_sec = 0;
+        utimes.it_value.tv_usec = 1000000 / HZ;
+        utimes.it_interval.tv_sec = 0;
+        utimes.it_interval.tv_usec = 1000000 / HZ;
         setitimer(ITIMER_REAL, &timer, NULL);
     }
 }
@@ -56,6 +56,6 @@ void preempt_start(bool preempt)
 void preempt_stop(void)
 {
 	/* TODO Phase 4 */
-	preempt_start(preempt_enabled);
+	preempt_start(preempt_enable);
 }
 
