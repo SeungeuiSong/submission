@@ -89,7 +89,7 @@ int uthread_create(uthread_func_t func, void *arg)
     return rv;
 }*/
 
-int uthread_create(uthread_func_t func, void arg)
+int uthread_create(uthread_func_t func, void *arg)
 {
     preempt_disable();
     struct uthread_tcbnew_thread = (struct uthread_tcb *)malloc(sizeof(struct uthread_tcb));
