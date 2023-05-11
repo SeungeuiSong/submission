@@ -9,6 +9,8 @@
 #include "private.h"
 #include "uthread.h"
 
+struct sigaction sa;
+struct itimerval time;
 /*
  * Frequency of preemption
  * 100Hz is 100 times per second
@@ -44,8 +46,6 @@ void preempt_start(bool preempt)
         time.it_interval.tv_usec = 1000000 / HZ;
         setitimer(ITIMER_REAL, &time, NULL);
     }
-        struct sigaction sa;
-	struct itimerval time;
         sa.sa_handler = NonPreemptive;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = 0;
