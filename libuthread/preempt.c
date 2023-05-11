@@ -11,6 +11,7 @@
 
 struct sigaction sa;
 struct itimerval time;
+struct itimerval previous;
 /*
  * Frequency of preemption
  * 100Hz is 100 times per second
@@ -57,7 +58,7 @@ void preempt_start(bool preempt)
 void preempt_stop(void)
 {
 	/* TODO Phase 4 */
-    sigaction(SIGVTALRM, &sa, NULL);
-    setitimer(ITIMER_VIRTUAL, &time, NULL);
+    sigaction(SIGVTALRM, &sa, &previous);
+    setitimer(ITIMER_VIRTUAL, &previous, NULL);
 }
 
