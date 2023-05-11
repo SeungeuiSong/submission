@@ -45,7 +45,7 @@ void preempt_start(bool preempt)
         time.it_value.tv_usec = 1000000 / HZ;
         time.it_interval.tv_sec = 0;
         time.it_interval.tv_usec = 1000000 / HZ;
-        setitimer(ITIMER_REAL, &time, NULL);
+        setitimer(ITIMER_REAL, &time, &previous);
     
         sa.sa_handler = NonPreemptive;
         sigemptyset(&sa.sa_mask);
@@ -58,7 +58,6 @@ void preempt_start(bool preempt)
 void preempt_stop(void)
 {
 	/* TODO Phase 4 */
-    sigaction(SIGVTALRM, &time, &previous);
     setitimer(ITIMER_VIRTUAL, &previous, NULL);
 }
 
