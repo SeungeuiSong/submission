@@ -3,7 +3,7 @@ lib := libuthread.a
 
 all: $(lib)
 
-CC := gcc
+//CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 
 ## Phase 1: Build library
