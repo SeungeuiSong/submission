@@ -59,7 +59,7 @@ int sem_up(sem_t sem)
 
     /* If threads are waiting, wake up the oldest one */
     if (queue_length(sem->waiting_list)) {
-       queue_dequeue(sem->waiting_list, ((void**) &uthread);
+       queue_dequeue(sem->waiting_list, ((void**) &uthread));
         uthread_unblock(uthread);
     }
 
