@@ -37,7 +37,7 @@ void uthread_yield(void)
 {
     preempt_disable();
     queue_enqueue(waiting_list, uthread_current());
-    uthread_ctx_switch(prev_thread->context, main_thread->context);
+    uthread_ctx_switch(main_thread->context,prev_thread->context);
 	/* TODO Phase 2 */
 }
 
