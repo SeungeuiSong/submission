@@ -50,7 +50,6 @@ void uthread_exit(void)
     free(prev_thread->stack);
     queue_delete(ready_list, prev_thread);
     queue_dequeue(ready_list, ((void**) &process));
-    process = next_thread;
     uthread_ctx_switch(prev_thread->context, next_thread->context);
     preempt_enable();
 }
@@ -74,7 +73,7 @@ int uthread_create(uthread_func_t func, void *arg)
     new_thread->tid = queue_length(ready_list) + 1;
     new_thread->state = 1;
 
-    if (uthread_ctx_init(&(new_thread->context), new_thread->stack, func, arg) == -1) {
+    if (uthread_ctx_init(new_thread->context, new_thread->stack, func, arg) == -1) {
         free(new_thread->stack);
         free(new_thread);
         preempt_enable();
