@@ -95,10 +95,12 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 void uthread_block(void)
 {
     uthread_ctx_switch(prev_thread->context, next_thread->context);
+    preempt_disable();
 
 }
 
 void uthread_unblock(struct uthread_tcb *uthread)
 {
     queue_enqueue(ready_list, uthread);
+     preempt_enable();
 }
