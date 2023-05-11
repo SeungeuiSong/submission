@@ -26,4 +26,4 @@ context.o: private.h context.c
     $(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-    rm -rf sem.o queue.o node.o preempt.o uthread.o context.o libuthread.a
+    rm -rf sem.o queue.o preempt.o uthread.o context.o libuthread.a
