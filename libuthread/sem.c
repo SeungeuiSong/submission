@@ -42,8 +42,8 @@ int sem_down(sem_t sem)
 	return -1;
     if (sem->count == 0) {
         /* If no resources available, wait until one becomes available */
-        uthread_block();
         queue_enqueue(sem->waiting_list, uthread_current());
+        uthread_block();
     }
     else{
     	sem->count--;
