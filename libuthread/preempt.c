@@ -45,12 +45,12 @@ void preempt_start(bool preempt)
         time.it_interval.tv_sec = 0;
         time.it_interval.tv_usec = 1000000 / HZ;
         setitimer(ITIMER_REAL, &time, NULL);
-    }
+    
         sa.sa_handler = NonPreemptive;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = 0;
         sigaction(SIGALRM, &sa, NULL);
-
+	}
 
 }
 
