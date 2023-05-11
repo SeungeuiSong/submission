@@ -81,15 +81,51 @@ int uthread_create(uthread_func_t func, void *arg)
 
 int uthread_run(bool preempt, uthread_func_t func, void *arg)
 {
-    if (preempt) {
+	/* TODO Phase 2 */
 	preempt_start(preempt);
-    }
-    int tid = uthread_create(func, arg);
-    if (tid == -1) {
-        return -1;
-    }
-    uthread_yield();
-    return tid;
+
+
+	struct uthread_tcb* first = malloc(sizeof(struct uthread_tcb));
+	if(first == NULL)
+		return -1;
+	first->context = malloc(sizeof(ucontext_t));
+    	first->stack = uthread_ctx_alloc_stack();
+	int output = uthread_ctx_init(first->context, first->stack, func, arg);
+	waiting_list = queue_create();
+	ready_list = queue_create();
+	queue_enqueue(waiting_list, first);
+    	queue_enqueue(ready_list, first);
+	
+	next_thread = malloc(sizeof(struct uthread_tcb));
+	prev_thread = malloc(sizeof(struct uthread_tcb));
+	prev_thread->context = malloc(sizeof(ucontext_t));
+	getcontext(prev_thread->context);
+	process = malloc(sizeof(struct uthread_tcb));
+	process->context = malloc(sizeof(ucontext_t));
+	getcontext(process->context);
+	if(queue_length(waiting_list)){
+		queue_dequeue(waiting_list, ((void**) &next_thread));
+		current = next_thread;
+		uthread_ctx_switch(prev_thread->context, next_thread->context);
+	}
+	preempt_stop();
+	
+	struct uthread_tcb* b[queue_length(ready_list)];
+	for(int i = 0; i < queue_length(ready_list); i++)
+	{
+	queue_dequeue(ready_list, (void**)&b[i]);
+	free((b[i])->stack);
+        free(b[i]->context);
+        free(b[i]);
+	}
+	free(process->context);
+	free(prev_thread->context);
+	free(process);
+	free(prev_thread);
+	queue_destroy(waiting_list);
+	queue_destroy(ready_list);
+	preempt_stop();
+	return output;
 }
 
 void uthread_block(void)
