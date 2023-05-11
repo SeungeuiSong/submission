@@ -28,12 +28,26 @@ sem_t sem_create(size_t count)
 int sem_destroy(sem_t sem)
 {
 	/* TODO Phase 3 */
-	
+	if(sem == NULL || queue_length(sem->waitlist) != 0)
+		return -1;
+	free(sem);
+	return 0;
 }
 
 int sem_down(sem_t sem)
 {
 	/* TODO Phase 3 */
+	    /* Try to take a resource */
+    if(sem == NULL)
+	return -1;
+    while (sem->count == 0) {
+        /* If no resources available, wait until one becomes available */
+        queue_enqueue(sem->waitlist, uthread_current());
+        pthread_yield();
+    }
+    sem->count--;
+    return 0;
+	
 }
 
 int sem_up(sem_t sem)
