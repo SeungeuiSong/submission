@@ -49,7 +49,7 @@ void uthread_exit(void)
     prev_thread->state = 0;
     free(prev_thread->stack);
     queue_delete(ready_list, prev_thread);
-    struct uthread_tcb *next_thread = queue_dequeue(ready_list);
+    queue_dequeue(ready_list, ((void**) &process));
     process = next_thread;
     uthread_ctx_switch(prev_thread->context, next_thread->context);
     preempt_enable();
