@@ -40,16 +40,17 @@ void preempt_start(bool preempt)
 {
     if (preempt) {
         struct sigaction sa;
-        sa.sa_handler = preempt;
+	struct itimerval time;
+        sa.sa_handler = NonPreemptive;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = 0;
         sigaction(SIGALRM, &sa, NULL);
 
-        utimes.it_value.tv_sec = 0;
-        utimes.it_value.tv_usec = 1000000 / HZ;
-        utimes.it_interval.tv_sec = 0;
-        utimes.it_interval.tv_usec = 1000000 / HZ;
-        setitimer(ITIMER_REAL, &timer, NULL);
+        time.it_value.tv_sec = 0;
+        time.it_value.tv_usec = 1000000 / HZ;
+        time.it_interval.tv_sec = 0;
+        time.it_interval.tv_usec = 1000000 / HZ;
+        setitimer(ITIMER_REAL, &time, NULL);
     }
 }
 
