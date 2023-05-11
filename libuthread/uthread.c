@@ -68,7 +68,7 @@ int uthread_create(uthread_func_t func, void *arg)
     new_thread->context = malloc(sizeof(ucontext_t));
     new_thread->stack = uthread_ctx_alloc_stack();
     new_thread->state = 1;
-    new_thread->tid = uthread_ctx_init(new_thread->context, ut->stack, func, arg);
+    new_thread->tid = uthread_ctx_init(new_thread->context, new_thread->stack, func, arg);
 
     if (uthread_ctx_init(new_thread->context, new_thread->stack, func, arg) == -1) {
         free(new_thread->stack);
