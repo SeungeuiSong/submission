@@ -39,14 +39,14 @@ int sem_down(sem_t sem)
 	    /* Try to take a resource */
     if(sem == NULL)
 	return -1;
-	utread_block();
+	utread_block(uthread);
     if (sem->count == 0) {
         /* If no resources available, wait until one becomes available */
     }
     else{
     	sem->count--;
     }
-	utread_unblock();
+	utread_unblock(uthread);
     return 0;	
 }
 
