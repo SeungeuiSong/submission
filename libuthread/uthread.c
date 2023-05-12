@@ -129,9 +129,8 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 	return output;
 }
 
-void uthread_block(void)
+void uthread_`(void)
 {            
-  queue_enqueue(waiting_list, uthread_current());   
   uthread_ctx_switch(process->context,main_thread->context);
 }
 
