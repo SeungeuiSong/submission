@@ -24,6 +24,15 @@ sem_t sem_create(size_t count)
     return sem;
 }
 
+int sem_destroy(sem_t sem)
+{
+	/* TODO Phase 3 */
+	if(sem == NULL || queue_length(sem->waiting_list) != 0)
+		return -1;
+	free(sem);
+	return 0;
+}
+
 int sem_down(sem_t sem)
 {
     preempt_disable();
