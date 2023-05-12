@@ -24,28 +24,30 @@ sem_t sem_create(size_t count)
     return sem;
 }
 
-int sem_destroy(sem_t sem)
-{
-	/* TODO Phase 3 */
-	if(sem == NULL || queue_length(sem->waiting_list) != 0)
-		return -1;
-	free(sem);
-	return 0;
-}
-
 int sem_down(sem_t sem)
 {
-	/* TODO Phase 3 */
-	    /* Try to take a resource */
-    if(sem == NULL){
-	return -1;}
-	uthread_block();
-    while(sem->count==0){
-  queue_enqueue(sem->waiting_list, uthread_current());  
+    preempt_disable();
+    s->count--;
+    if (sem->count < 0) {
+        struct uthread_tcb *prev_thread = uthread_current();
+        queue_enqueue(sem->waiting_list, prev_thread);
+        uthread_block();
     }
-	sem->count--;
-	uthread_unblock(uthread);
-    return 0;	
+    preempt_enable();
+    return 0;
+}
+
+int sem_up(sem_t sem)
+{
+    preempt_disable();
+    sem->count++;
+    if (sem->count <= 0) {
+        struct uthread_tcb *thread;
+        queue_dequeue(sem->waiting_list, ((void**) &thread));
+        uthread_unblock(thread);
+    }
+    preempt_enable();
+    return 0;
 }
 
 int sem_up(sem_t sem)
