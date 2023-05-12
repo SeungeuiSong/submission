@@ -41,7 +41,7 @@ int sem_down(sem_t sem)
 	return -1;}
 	uthread_block();
     while(sem->count==0){
-    	queue_enqueue(sem->waitting_list, uthread_current());
+    	queue_enqueue(sem->waiting_list, uthread_current());
     }
 	sem->count--;
 	uthread_unblock(uthread);
