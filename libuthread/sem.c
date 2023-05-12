@@ -14,14 +14,14 @@ struct uthread_tcb* uthread;
 sem_t sem_create(size_t count)
 {
 	/* TODO Phase 3 */
-    struct semaphore* semap = malloc(sizeof(struct semaphore));
-    if (semap == NULL) {
+    struct semaphore* sem = malloc(sizeof(struct semaphore));
+    if (sem == NULL) {
         return NULL;
     }
 
-    semap -> waiting_list = queue_create();
-    semap->count = count;
-    return semap;
+    sem -> waiting_list = queue_create();
+    sem->count = count;
+    return sem;
 }
 
 int sem_destroy(sem_t sem)
