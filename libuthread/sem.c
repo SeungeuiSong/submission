@@ -40,7 +40,7 @@ int sem_down(sem_t sem)
     if(sem == NULL){
 	return -1;}
 	uthread_block();
-    while(sem->cout==0)
+    while(sem->count==0)
     	queue_enqueue(sem->waitlist, uthread_current());
     }
 	sem->count--;
@@ -55,12 +55,10 @@ int sem_up(sem_t sem)
 	return -1;}
 	uthread_block();
     /* If threads are waiting, wake up the oldest one */
-    if (!queue_length(sem->waiting_list)) {
-	    sem->count++;
-    }
-    else{
+    if (queue_length(sem->waiting_list)){
        queue_dequeue(sem->waiting_list, ((void**) &uthread));
         uthread_unblock(uthread);
     }
+	sem->count++;
     return 0;
 }
