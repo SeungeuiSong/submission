@@ -32,7 +32,6 @@ int sem_destroy(sem_t sem)
 	free(sem);
 	return 0;
 }
-
 int sem_down(sem_t sem)
 {
     preempt_disable();
@@ -48,13 +47,10 @@ int sem_down(sem_t sem)
 
 int sem_up(sem_t sem)
 {
-    if(sem == NULL){
-	return -1;}
     preempt_disable();
     sem->count++;
     if (sem->count <= 0) {
-        struct uthread_tcb *thread;
-        queue_dequeue(sem->waiting_list, ((void**) &thread));
+        queue_dequeue(sem->waiting_list, ((void**) &uthread));
         uthread_unblock(thread);
     }
     preempt_enable();
