@@ -131,8 +131,8 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 
 void uthread_block(void)
 {            
-  uthread_ctx_switch(process->context,main_thread->context);
   queue_enqueue(waiting_list, uthread_current());   
+  uthread_ctx_switch(process->context,main_thread->context);
 }
 
 void uthread_unblock(struct uthread_tcb *uthread)
