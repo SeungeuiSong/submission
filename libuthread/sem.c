@@ -51,7 +51,7 @@ int sem_up(sem_t sem)
     sem->count++;
     if (sem->count <= 0) {
         queue_dequeue(sem->waiting_list, ((void**) &uthread));
-        uthread_unblock(thread);
+        uthread_unblock(uthread);
     }
     preempt_enable();
     return 0;
