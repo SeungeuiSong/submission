@@ -55,7 +55,7 @@ int sem_up(sem_t sem)
     if(sem == NULL)
 	return -1;
     /* If threads are waiting, wake up the oldest one */
-    if (queue_length(sem->waiting_list)) {
+    if (!queue_length(sem->waiting_list)) {
 	    sem->count++;
     }
     else{
