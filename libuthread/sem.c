@@ -39,6 +39,8 @@ int sem_down(sem_t sem)
 
 int sem_up(sem_t sem)
 {
+    if(sem == NULL){
+	return -1;}
     preempt_disable();
     sem->count++;
     if (sem->count <= 0) {
