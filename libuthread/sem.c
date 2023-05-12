@@ -38,7 +38,6 @@ int sem_down(sem_t sem)
     sem->count--;
     if (sem->count < 0) {
         struct uthread_tcb *prev_thread = uthread_current();
-        queue_enqueue(sem->waiting_list, prev_thread);
         uthread_block();
     }
     preempt_enable();
