@@ -32,17 +32,20 @@ int sem_destroy(sem_t sem)
 	free(sem);
 	return 0;
 }
+
 int sem_down(sem_t sem)
 {
         /* Try to take a resource */
-    if(sem == NULL)
+    if (sem == NULL) {
         return -1;
+    }
+
     if (sem->count == 0) {
         /* If no resources available, wait until one becomes available */
         queue_enqueue(sem->waiting_list, uthread_current());
         uthread_block();
     }
-    else{
+    else {
         sem->count--;
     }
     return 0;
@@ -51,16 +54,19 @@ int sem_down(sem_t sem)
 
 int sem_up(sem_t sem)
 {
-    if(sem == NULL)
+    if (sem == NULL) {
         return -1;
+    }
     
 
     /* If threads are waiting, wake up the oldest one */
+    struct uthread_tcb* uthread;
+    
     if (!queue_length(sem->waiting_list)) {
         sem->count++;
     }
-    else{
-       queue_dequeue(sem->waiting_list, ((void**) &uthread));
+    else {
+        queue_dequeue(sem->waiting_list, ((void**) &uthread));
         uthread_unblock(uthread);
     }
 
