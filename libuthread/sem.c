@@ -34,24 +34,35 @@ int sem_destroy(sem_t sem)
 }
 int sem_down(sem_t sem)
 {
-    preempt_disable();
-    sem->count--;
-    if (sem->count < 0) {
-        struct uthread_tcb *prev_thread = uthread_current();
+        /* Try to take a resource */
+    if(sem == NULL)
+        return -1;
+    if (sem->count == 0) {
+        /* If no resources available, wait until one becomes available */
+        queue_enqueue(sem->waiting_list, uthread_current());
         uthread_block();
     }
-    preempt_enable();
+    else{
+        sem->count--;
+    }
     return 0;
+    
 }
 
 int sem_up(sem_t sem)
 {
-    preempt_disable();
-    sem->count++;
-    if (sem->count <= 0) {
-        queue_dequeue(sem->waiting_list, ((void**) &uthread));
+    if(sem == NULL)
+        return -1;
+    
+
+    /* If threads are waiting, wake up the oldest one */
+    if (!queue_length(sem->waiting_list)) {
+        sem->count++;
+    }
+    else{
+       queue_dequeue(sem->waiting_list, ((void**) &uthread));
         uthread_unblock(uthread);
     }
-    preempt_enable();
+
     return 0;
 }
