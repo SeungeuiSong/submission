@@ -130,7 +130,8 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 }
 
 void uthread_block(void)
-{            
+{  
+  queue_enqueue(sem->waiting_list, prev_thread);
   uthread_ctx_switch(process->context,main_thread->context);
 }
 
