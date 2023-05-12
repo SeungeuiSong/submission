@@ -1,11 +1,3 @@
-lib := libuthread.a
-
-all: $(lib)
-
-CC := gcc
-CFLAGS := -Wall -Wextra -Werror
-
-## TODO: Phase 1
 # Target library
 lib := libuthread.a
 
@@ -34,4 +26,4 @@ preempt.o : preempt.c uthread.o
 	$(CC) $(CFLAGS) -c -o $@ preempt.c -l uthread.o
 	
 clean:
-	rm -rf sem.o queue.o preempt.o uthread.o context.o libuthread.a
+	rm -rf libuthread.a queue.o uthread.o sem.o context.o preempt.o
