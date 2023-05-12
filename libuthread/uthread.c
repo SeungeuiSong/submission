@@ -137,5 +137,5 @@ void uthread_block(void)
 
 void uthread_unblock(struct uthread_tcb *uthread)
 {
-    queue_enqueue(ready_list, uthread);
+    queue_enqueue(waiting_list, uthread);
 }
