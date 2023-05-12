@@ -27,7 +27,7 @@ sem_t sem_create(size_t count)
 int sem_down(sem_t sem)
 {
     preempt_disable();
-    s->count--;
+    sem->count--;
     if (sem->count < 0) {
         struct uthread_tcb *prev_thread = uthread_current();
         queue_enqueue(sem->waiting_list, prev_thread);
@@ -49,20 +49,5 @@ int sem_up(sem_t sem)
         uthread_unblock(thread);
     }
     preempt_enable();
-    return 0;
-}
-
-int sem_up(sem_t sem)
-{
-	/* TODO Phase 3 */
-    if(sem == NULL){
-	return -1;}
-	uthread_block();
-    /* If threads are waiting, wake up the oldest one */
-    if (queue_length(sem->waiting_list)){
-       queue_dequeue(sem->waiting_list, ((void**) &uthread));
-        uthread_unblock(uthread);
-    }
-	sem->count++;
     return 0;
 }
