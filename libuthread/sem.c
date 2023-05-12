@@ -39,7 +39,7 @@ int sem_down(sem_t sem)
 	    /* Try to take a resource */
     if(sem == NULL){
 	return -1;}
-	utread_block();
+	utread_block;
     if (sem->count == 0) {
         /* If no resources available, wait until one becomes available */
     }
@@ -55,7 +55,7 @@ int sem_up(sem_t sem)
 	/* TODO Phase 3 */
     if(sem == NULL){
 	return -1;}
-	uthread_block();
+	uthread_block;
     /* If threads are waiting, wake up the oldest one */
     if (!queue_length(sem->waiting_list)) {
 	    sem->count++;
